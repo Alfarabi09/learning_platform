@@ -21,9 +21,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-
-            # Здесь изменение: вместо автоматического входа перенаправляем на страницу авторизации
-            return redirect('login')  # перенаправляем на страницу авторизации
+            return redirect('login')  
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -97,7 +95,7 @@ class AssignmentListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         for assignment in queryset:
-            print(assignment.classroom.students.all()) # это правильно
+            print(assignment.classroom.students.all()) 
         return queryset
 
 class AssignmentCreateView(CreateView):
