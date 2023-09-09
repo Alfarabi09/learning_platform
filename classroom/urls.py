@@ -15,8 +15,9 @@ urlpatterns = [
     path('classrooms/<int:pk>/edit/', views.ClassroomUpdateView.as_view(), name='classroom_edit'),
     
     # Assignment URLs
-    path('assignments/', views.AssignmentListView.as_view(), name='assignment_list'),
+    path('assignments/', views.AssignmentListView.as_view(), name='assignments_list'),  
     path('assignments/add/', views.AssignmentCreateView.as_view(), name='assignment_add'),
     path('assignments/<int:pk>/', views.AssignmentDetailView.as_view(), name='assignment_detail'),
     path('assignments/<int:pk>/edit/', views.AssignmentUpdateView.as_view(), name='assignment_edit'),
+    path('assignments/complete/<int:assignment_id>/', views.mark_assignment_completed, name='mark_completed'),
 ]

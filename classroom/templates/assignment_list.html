@@ -25,12 +25,24 @@
                 <a href="{% url 'assignment_detail' assignment.pk %}" class="btn btn-info btn-sm">Details</a>
                 <a href="{% url 'assignment_edit' assignment.pk %}" class="btn btn-warning btn-sm">Edit</a>
             </td>
+            <td>
+              
+                {% if request.user in assignment.completed_by.all %}
+                    Выполнено
+                {% else %}
+                    <form method="post" action="{% url 'mark_completed' assignment.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Отметить как выполненное</button>
+                    </form>
+                {% endif %}
+            </td>
         </tr>
         {% empty %}
-        <tr>
-            <td colspan="5" class="text-center">No assignments available.</td>
-        </tr>
+            <tr>
+                <td colspan="6">No assignments available.</td>
+            </tr>
         {% endfor %}
+
     </tbody>
 </table>
 {% endblock %}

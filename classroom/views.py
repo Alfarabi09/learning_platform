@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .models import Classroom, Assignment
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Classroom, Assignment, CompletedAssignment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -30,7 +30,21 @@ def register(request):
 
 @login_required
 def profile(request):
-    return render(request, 'profile.html', {'user': request.user})
+    total_assignments = Assignment.objects.all().count()
+    completed_assignments_count = request.user.completed_assignments.count()
+    
+    if total_assignments == 0:
+        completion_percentage = 0
+    else:
+        completion_percentage = (completed_assignments_count / total_assignments) * 100
+
+    context = {
+        'total_assignments': total_assignments,
+        'completed_assignments_count': completed_assignments_count,
+        'completion_percentage': completion_percentage
+    }
+    
+    return render(request, 'profile.html', context)
 
 def add_assignment(request):
     if request.method == 'POST':
@@ -43,6 +57,17 @@ def add_assignment(request):
 
     return render(request, 'assignment_form.html', {'form': form})
 
+@login_required
+def mark_assignment_completed(request, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id)
+    assignment.completed_by.add(request.user)
+    return redirect('assignments_list')
+
+def assignment_list(request):
+    assignments = Assignment.objects.all()
+    for assignment in assignments:
+        print(assignment.classroom.students.all()) 
+    return render(request, 'assignment_list.html', {'assignments': assignments})
 
 class ClassroomListView(ListView):
     model = Classroom
@@ -67,6 +92,13 @@ class ClassroomUpdateView(UpdateView):
 class AssignmentListView(ListView):
     model = Assignment
     template_name = 'assignment_list.html'
+    
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        for assignment in queryset:
+            print(assignment.classroom.students.all()) # это правильно
+        return queryset
 
 class AssignmentCreateView(CreateView):
     model = Assignment
