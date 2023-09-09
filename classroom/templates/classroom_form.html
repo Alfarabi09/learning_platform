@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h1>{% if object %}Edit{% else %}Add{% endif %} Classroom</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name">Name:</label>
+        {{ form.name|add_class:"form-control"|attr:"id:id_name" }}
+    </div>
+    <div class="form-group">
+        <label for="id_description">Description:</label>
+        {{ form.description|add_class:"form-control"|attr:"id:id_description" }}
+    </div>
+    <div class="form-group">
+        <label for="id_students">Students:</label>
+        {{ form.students|add_class:"form-control"|attr:"id:id_students" }}
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+{% endblock %}

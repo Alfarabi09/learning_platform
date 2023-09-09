@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <h2>Register</h2>
+    <form method="post" class="form-group">
+        {% csrf_token %}
+        {{ form.username.label_tag }} 
+        {{ form.username|add_class:"form-control" }}
+        {{ form.password.label_tag }}
+        {{ form.password|add_class:"form-control" }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+{% endblock %}
